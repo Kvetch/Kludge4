@@ -1,0 +1,29 @@
+Kludge 4.x Changes
+
+4.1.1 -
+	Single snapshot of all NTUSER.dat files
+	Modified kludge-wmics to reinclude services.csv
+
+4.1.1 -
+	Removed the HMFT and added the old FLS perl script.  Adjusted the timeline functions appropriately. 
+	Fixed bug in XP log and reg timeline parser
+	Split all individual TLN files then cat them together
+	Adjusted Memory Transfer Check.  Function will first check for the existence of the physmem-machine.dump file, if it exists it will then wait for the size to be greater than 0 before transferring.  There was a timing issue on large memory systems.
+	Moved the computername function to earlier in the script so the memory transfer script can determine the name of the file to look for.
+	
+4.1.0 - 
+	Revised the LogParser.exe/dll.  Script will now need you to have it installed. (Default C:\\Program Files\\Log Parser 2.2\LogParser.exe/dll)
+	Corrected Processor Architecture grep
+
+4.0.2 - 
+	Changed Zip Report to be named CollectedData in the batch files
+	Added correct SEP/McAfee paths for Win7 and Win7x64 in the batch files
+	Commented the logging "log.logger.debug" code all py files until I can find the time to properly setup a log exceptions
+	Adjusted the pid procdumping process to write directly to MemInfo
+	Adjusted how the memory filename is determined for Volatility.  This way is independent of the machine name so post reports can be processed without knowing the correct machine name.
+
+4.0.1 - 
+	Adjusted how the machine name is determined.
+	Adjusted the output Report dir name
+	Adjusted the license from CC to Apache 2.0
+	Commented out the logging code until I can properly log each method with needed info

@@ -1,0 +1,192 @@
+TO-DO
+
+Move clean up to separate thread
+Add some logging that is worth a hoot.
+Firefox SQLite parsing
+	"Recent versions of Firefox use "PRAGMA journal_mode=WAL" which requires
+	SQLite version 3.7.0 or later.  You won't be able to read the database files
+	with SQLite version 3.6.23.1 or earlier.  You'll get the "file is encrypted
+	or is not a database" message." 
+Change cleanup to be prior to analyzer
+ReReview AnalyzeMFT or find a different offline mft.dat script.  AnalyzeMFT has errors on some mft.dat files - hexacorn's hmft.exe works nicely
+Prefetch parser
+Add option level 3 files to comparison
+Add option to feed in user list of md5's for comparison - combination/addition - lucky punch
+Spawn Pinging thread for notification if host went offline
+Event Logs - still having an issue with some EVTX files with spaces in the name
+Prefetch Files for Win7 - what are the db files
+Recyclebin parser for Win7
+Add How Many Days options for TLN - current is 30
+Execute Volatility "vol.py --help", parse out plugins and determine plugins to use from that
+add jumplists
+Combine commands for less password prompts?
+sticky notes
+Make IDT Hooks stand out
+Compare processes and md5 hash of each
+Parse .log, .sav and DEFAULT - if need be
+Add if >=Win7 run ProductPolicy RR plugin
+
+
+Operating System 	Version Number
+Windows 1.0 	1.04
+Windows 2.0 	2.11
+Windows 3.0 	3
+Windows NT 3.1 	3.10.528
+Windows for Workgroups 3.11 	3.11
+Windows NT Workstation 3.5 	3.5.807
+Windows NT Workstation 3.51 	3.51.1057
+Windows 95 	4.0.950
+Windows NT Workstation 4.0 	4.0.1381
+Windows 98 	4.1.1998
+Windows 98 Second Edition 	4.1.2222
+Windows Me 	4.90.3000
+Windows 2000 Professional 	5.0.2195
+Windows XP 	5.1.2600
+Windows Vista 	6.0.6000
+Windows 7 	6.1.7600
+
+
+Add Firefox Add-On extraction report
+$USNJR
+FF/Chrome sql db extraction to timeline
+Check DEP settings
+	wmic OS Get DataExecutionPrevention_Available
+	If the output is "TRUE," hardware-enforced DEP is available.
+	To determine the current DEP support policy, follow these steps.
+	wmic OS Get DataExecutionPrevention_SupportPolicy
+	The value returned will be 0, 1, 2 or 3. This value corresponds to one of the DEP support policies that are described in the following table.
+	DataExecutionPrevention_SupportPolicy property value	Policy Level	Description
+	2	OptIn (default configuration)	Only Windows system components and services have DEP applied
+	3	OptOut	DEP is enabled for all processes. Administrators can manually create a list of specific applications which do not have DEP applied
+	1	AlwaysOn	DEP is enabled for all processes
+	0	AlwaysOff	DEP is not enabled for any processes
+	Note To verify that Windows is running with hardware DEP enabled, examine the DataExecutionPrevention_Drivers property of the Win32_OperatingSystem class. In some system configurations, hardware DEP may be disabled by using the /nopae or /execute switches in the Boot.ini file. To examine this property, type the following command at a command prompt:
+	wmic OS Get DataExecutionPrevention_Drivers
+
+
+
+Add Mail File Grabbing - DONE
+hobocopy ff sqldb's - DONE
+Add ability to just run reporter/analyzer - for post analysis of machines that went offline - DONE
+Fix EVTX Log files with space in the name - DONE
+Timeline Parsing fixes - index.dat files - DONE
+Adjust script to only collect index.dat files from all Windows 7 browser history locations - DONE
+Fix Comparison - pull SysInfo/computername and do a replace on file1's data on every line - DONE
+Detach Process - DONE
+Do grep on previous incidents -DONE
+Log2Timeline inclusion??? - nope -DONE
+Supress yes/no on reg export, always overwrite -DONE
+Remove sleeps -DONE
+Make htm menu based on what content is pulled -DONE
+Add Better Explaination to Table Content Header -DONE
+					elif fnmatch.fnmatch(file, 'PSInfo.csv'):
+					print('Found SysInfo file ' + file + ", size is " + str(size))
+					self.create_htm(file,filepath,'SysInfo',*********************'SysInternals PSLoggedOn Output'**********)
+Redo RegRip -DONE
+Fix unchecking button - reset to NO -DONE
+Fix ProcDump -DONE
+Determine Windows Version cleaner - DONE
+	wmic /node:1.2.3.4 /user:rahl process call create "cmd.exe /c ver > c:\windows\temp\winver.txt" - DONE
+	xcopy \\1.2.3.4\c$\windows\temp\winver.txt . - DONE
+Check multiple zips - DONE
+If gpg only copy gpg files - DONE
+GPG Decryption Test - DONE
+Add timestamp to temp dir - DONE
+DEP
+    wmic OS Get DataExecutionPrevention_Available
+    If the output is "TRUE," hardware-enforced DEP is available.
+
+To determine the current DEP support policy, follow these steps.
+    wmic OS Get DataExecutionPrevention_SupportPolicy
+    The value returned will be 0, 1, 2 or 3. This value corresponds to one of the DEP support policies that are described in the following table.
+
+DataExecutionPrevention_SupportPolicy property value	Policy Level	Description
+2	OptIn (default configuration)	Only Windows system components and services have DEP applied
+3	OptOut	DEP is enabled for all processes. Administrators can manually create a list of specific applications which do not have DEP applied
+1	AlwaysOn	DEP is enabled for all processes
+0	AlwaysOff	DEP is not enabled for any processes
+Note To verify that Windows is running with hardware DEP enabled, examine the DataExecutionPrevention_Drivers property of the Win32_OperatingSystem class. In some system configurations, hardware DEP may be disabled by using the /nopae or /execute switches in the Boot.ini file. To examine this property, type the following command at a command prompt:
+wmic OS Get DataExecutionPrevention_Drivers
+
+
+
+SysInfo
+OSInfo
+DriveInfo
+Patches
+ShareUser
+Misc
+AV
+ads
+CDrive
+DDrive
+DocsSet
+EDrive
+FFInfo
+Flash
+JRE
+MD5
+PerfLog
+ProgData
+ProgFiles
+Acrobat
+Recovery
+Software
+UnSignedExes
+UserFiles
+WinFiles
+MemDllDump
+MemDlls
+MemDrivers
+MemFile
+MemSids
+MemHandles
+MemHiveList
+MemHiveScan
+MemInfo
+MemKdbg
+Memkpcr
+MemMap
+MemModScan
+MemModules
+MemMutant
+MemNetScan
+
+Mempsscan
+Mempstree
+MemSSDT
+MemThread
+MemVadInfo
+MemVadTree
+MemVadWalk
+Firewall
+Routing
+DNS
+NetBios
+TCPConnect
+NIC
+Routing
+TCPConnect
+AutoRun
+Codecs
+Explorer-Addons
+Gadgets
+Handles
+IE-Addons
+KnownDlls
+RunningDlls
+MiscHook
+ProcInfo
+Prot-Net
+AutoRun
+WinLogon
+MiscHook
+BHOs
+USBStor
+RegNTUser
+RegSAM
+RegSecurity
+RegSoftware
+RegSystem
+
+
