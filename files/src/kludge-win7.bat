@@ -484,6 +484,9 @@ REM Write out all processes using wsock32 via tasklist
 echo.
 echo All Processess using wsock32 via TaskList
 tasklist -m wsock32.dll >> Procs\WSock32-Procs.txt
+tasklist -m ws2_32.dll >> Procs\WS2_32-Procs.txt
+tasklist -m wininet.dll >> Procs\WinInet-Procs.txt
+tasklist -m ntdll.dll >> Procs\NTDll-Procs.txt
 
 REM Write out startup apps via wmic
 echo.

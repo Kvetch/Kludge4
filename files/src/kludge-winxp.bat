@@ -83,14 +83,14 @@ dir /b /a /q /s UsrClass.DAT > C:\Windows\Temp\analysis\usrclassdat.txt
 cd c:\windows\temp\analysis
 REM call :LockorNot ntuserdat.txt Registry
 call :LockorNot usrclassdat.txt Registry
-FOR /F "tokens=*" %%G IN ('dir /b ^"C:\Users\*^"') DO HoboCopyWin7.exe "c:\Users\%%G" Registry\%%G NTUSER.DAT
-REM FOR /F "tokens=*" %%G IN ('dir /b ^"C:\Users\*^"') DO HoboCopyWin7.exe "c:\Users\%%G\Local Settings\Application Data\Microsoft\Windows" Registry\%%G UsrClass.dat
+FOR /F "tokens=*" %%G IN ('dir /b ^"C:\Documents and Settings\*^"') DO HoboCopy.exe "c:\Documents and Settings\%%G" Registry\%%G NTUSER.DAT
+REM FOR /F "tokens=*" %%G IN ('dir /b ^"C:\Documents and Settings\*^"') DO HoboCopyWin7.exe "C:\Documents and Settings\%%G\Local Settings\Application Data\Microsoft\Windows" Registry\%%G UsrClass.dat
 
 
 echo.
 echo Copying UsrClass.dat files
 REM For each directory in the Docs and Settings copy out it's usrclass.dat
-FOR /F "tokens=*" %%G IN ('dir /b ^"C:\Documents and Settings\*^"') DO HoboCopy.exe "c:\Documents and Settings\%%G\Local Settings\Application Data\Microsoft\Windows" Registry\%%G UsrClass.dat
+REM FOR /F "tokens=*" %%G IN ('dir /b ^"C:\Documents and Settings\*^"') DO HoboCopy.exe "c:\Documents and Settings\%%G\Local Settings\Application Data\Microsoft\Windows" Registry\%%G UsrClass.dat
 
 REM Copy the hives
 echo.
@@ -405,6 +405,9 @@ REM Write out all processes using wsock32 via tasklist
 echo.
 echo All Processess using wsock32 via TaskList
 tasklist -m wsock32.dll >> Procs\WSock32-Procs.txt
+tasklist -m ws2_32.dll >> Procs\WS2_32-Procs.txt
+tasklist -m wininet.dll >> Procs\WinInet-Procs.txt
+tasklist -m ntdll.dll >> Procs\NTDll-Procs.txt
 
 REM Write out startup apps via wmic
 echo.

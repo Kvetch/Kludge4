@@ -13,7 +13,7 @@ class WhatThe():
 		"""Just A Class to kick off TKinter Class - no clue if this is correct"""
 		self = self
 		root = Tk()
-		root.title("Kludge 4.1.2")
+		root.title("Kludge 4.1.3")
 		Application(root)
 		root.mainloop()
 
@@ -456,6 +456,8 @@ class Application(Frame):
 			print("Looking for LogParser files at C:\Program Files\Log Parser 2.2")
 			call("xcopy \"C:\\Program Files\\Log Parser 2.2\\LogParser.dll\" \\\\" + vars.rmt_ip + "\\c$\\Windows\\Temp\\analysis\\ /Y /K", shell=True)
 			call("xcopy \"C:\\Program Files\\Log Parser 2.2\\LogParser.exe\" \\\\" + vars.rmt_ip + "\\c$\\Windows\\Temp\\analysis\\ /Y /K", shell=True)
+			call("xcopy \"C:\Program Files (x86)\Log Parser 2.2\\LogParser.dll\" \\\\" + vars.rmt_ip + "\\c$\\Windows\\Temp\\analysis\\ /Y /K", shell=True)
+			call("xcopy \"C:\Program Files (x86)\Log Parser 2.2\\LogParser.exe\" \\\\" + vars.rmt_ip + "\\c$\\Windows\\Temp\\analysis\\ /Y /K", shell=True)
 			
 		# WMIC Crud - Starts WMIC Script
 		"""TRY starting WMIC Script in a seperate thread to possibly avoid wmic failures on the remote"""

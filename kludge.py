@@ -2,8 +2,8 @@
 
 __description__ = 'kludge.py - multiple common forensics tools kludged together into a hopefully automated way to process, parse and run the tools'
 __author__ = 'Nick Baronian'
-__version__ = '4.1.2'
-__date__ = '2012-06-18'
+__version__ = '4.1.3'
+__date__ = '2012-08-15'
 
 # Author: Nick Baronian [nick <at> theinterw3bs [dot] com]
 # Name: kludge.py

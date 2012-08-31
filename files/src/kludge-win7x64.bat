@@ -484,6 +484,9 @@ REM Write out all processes using wsock32 via tasklist
 echo.
 echo All Processess using wsock32 via TaskList
 tasklist -m wsock32.dll >> Procs\WSock32-Procs.txt
+tasklist -m ws2_32.dll >> Procs\WS2_32-Procs.txt
+tasklist -m wininet.dll >> Procs\WinInet-Procs.txt
+tasklist -m ntdll.dll >> Procs\NTDll-Procs.txt
 
 REM Write out startup apps via wmic
 echo.
@@ -581,12 +584,16 @@ echo Outputting Adobe Acrobat, Adobe Reader, Flash and Java Version Information
 reg ADD HKCU\Software\Sysinternals\SigCheck /v EulaAccepted /t REG_DWORD /d 1 /f
 .\sigcheck.exe -q -e -v "C:\Program Files\Adobe\Reader 9.0\Reader\AcroRd32.exe" >> DocsAndFiles\Reader9.csv
 .\sigcheck.exe -q -e -v "C:\Program Files\Adobe\Reader 10.0\Reader\AcroRd32.exe" >> DocsAndFiles\Reader10.csv
+.\sigcheck.exe -q -e -v "C:\Program Files (x86)\Adobe\Reader 10.0\Reader\AcroRd32.exe" >> DocsAndFiles\Reader10.csv
 .\sigcheck.exe -q -e -v "C:\Program Files\Adobe\Acrobat 7.0\Acrobat\Acrobat.exe" >> DocsAndFiles\Acrobat7.csv
 .\sigcheck.exe -q -e -v "C:\Program Files\Adobe\Acrobat 8.0\Acrobat\Acrobat.exe" >> DocsAndFiles\Acrobat8.csv
 .\sigcheck.exe -q -e -v "C:\Program Files\Adobe\Acrobat 9.0\Acrobat\Acrobat.exe" >> DocsAndFiles\Acrobat9.csv
 .\sigcheck.exe -q -e -v "C:\Program Files\Adobe\Acrobat 10.0\Acrobat\Acrobat.exe" >> DocsAndFiles\Acrobat10.csv
+.\sigcheck.exe -q -e -v "C:\Program Files (x86)\Adobe\Acrobat\Acrobat.exe" >> DocsAndFiles\Acrobat10.csv
 .\sigcheck.exe -q -e -v "c:\WINDOWS\system32\Macromed\Flash\Flash*" >> DocsAndFiles\Flash.csv
+.\sigcheck.exe -q -e -v "C:\Windows\SysWOW64\Macromed\Flash\Flash*" >> DocsAndFiles\Flash.csv
 .\sigcheck.exe -q -e -v "C:\Program Files\Mozilla Firefox\firefox.exe" >> DocsAndFiles\Firefox.csv
+.\sigcheck.exe -q -e -v "C:\Program Files (x86)\Mozilla Firefox\firefox.exe" >> DocsAndFiles\Firefox.csv
 
 reg query "HKLM\SOFTWARE\JavaSoft\Java Runtime Environment" /s >> DocsAndFiles\JRE.txt
 
@@ -594,6 +601,7 @@ if %1 equ 3 (
 echo.
 echo Outputting Unsigned Exes/Dlls in the System32
 sigcheck -u -e c:\windows\system32 >> DocsAndFiles\UnSignedExes.txt
+sigcheck -u -e c:\windows\SysWOW64 >> DocsAndFiles\UnSignedExes.txt
 )
 
 REM Write all files in Prog Files, Doc and Set, Windows, SAV/McAfee Quarantine
