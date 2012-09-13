@@ -13,12 +13,12 @@ if exist "c:\windows\temp\kludge-wmics.bat.lck" (
     exit /b 1
 )
 
-if exist "c:\windows\temp\kludge-win7x64.bat.tmp" (
+if exist "c:\windows\temp\kludge-win7x64.bat.lck" (
 	echo kludge-win7x64.bat is already running. Exiting ...
     exit /b 1
 )
 
-copy NUL "c:\windows\temp\kludge-win7x64.bat.tmp"
+copy NUL "c:\windows\temp\kludge-win7x64.bat.lck"
 
 REM Set the title to show what is running
 title kludge-win7x64.bat[start]
