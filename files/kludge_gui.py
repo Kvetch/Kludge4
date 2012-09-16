@@ -134,9 +134,9 @@ class Application(Frame):
 		# define tracking button
 		self.csv_butt = Button(self, text='CSV File', command=self.ask_ir_track, state=DISABLED)
 		self.csv_butt.grid(row = 9, column = 1, sticky = W)
-		
+		self.ir_trk_path = StringVar()
 		# label for space
-		Label(self, text = " ").grid(row = 10, column = 0, sticky = W)
+		Label(self, textvariable = self.ir_trk_path).grid(row = 10, column = 0, sticky = W)
 				
 					
 		# GPG Encryption
@@ -163,9 +163,9 @@ class Application(Frame):
 		
 #		Label(self, text = "\n\n\n").grid(row = 12, column = 2, sticky = W)
 		
-		
+		self.gpg_key_path = StringVar()
 		# label for space
-		Label(self, text = " ").grid(row = 14, column = 0, sticky = W)
+		Label(self, textvariable = self.gpg_key_path ).grid(row = 14, column = 0, sticky = W)
 		self.base_compare = BooleanVar()
 		Checkbutton(self,
 			text = "Baseline Comparison Checks",
@@ -176,8 +176,9 @@ class Application(Frame):
 		Label(self, text = "Select Baseline Comparison Folder: ").grid(row = 16, column = 0, sticky = W)
 		self.base_butt = Button(self, text='Baseline Report Folder', command=self.ask_base_dir, state=DISABLED)
 		self.base_butt.grid(row = 16, column = 1, sticky = W)
+		self.base_path = StringVar()
+		Label(self, textvariable = self.base_path).grid(row = 17, column = 0, sticky = W)
 		
-		Label(self, text = " ").grid(row = 17, column = 0, sticky = W)
 		self.vol_analysis = BooleanVar()
 		Checkbutton(self,
 			text = "Volatility Memory Analysis",
@@ -192,9 +193,9 @@ class Application(Frame):
 		# define report button
 		self.vol_butt = Button(self, text='Volatility Directory', command=self.ask_vol_directory, state=DISABLED)
 		self.vol_butt.grid(row = 19, column = 1, sticky = W)
-		
+		self.vol_dir_path = StringVar()
 		Label(self,
-			text = " "
+			textvariable = self.vol_dir_path
 			).grid(row = 20, column = 0, sticky = W)
 			
 		self.rr_loc = BooleanVar()
@@ -208,9 +209,9 @@ class Application(Frame):
 		
 		self.rr_butt = Button(self, text='RegRipper Location', command=self.ask_rr_rip, state=DISABLED)
 		self.rr_butt.grid(row = 22, column = 1, sticky = W)
-		
+		self.rr_dir_path = StringVar()
 		Label(self,
-			text = " "
+			textvariable = self.rr_dir_path
 			).grid(row = 23, column = 0, sticky = W)
 		
 		self.inline = BooleanVar()
@@ -235,9 +236,9 @@ class Application(Frame):
 		
 		self.postrep_butt = Button(self, text='Collected Zip File Directory', command=self.ask_postrep, state=DISABLED)
 		self.postrep_butt.grid(row = 27, column = 1, sticky = W)
-		
+		self.postrep_dir_path = StringVar()
 		Label(self,
-			text = " "
+			textvariable = self.postrep_dir_path
 			).grid(row = 28, column = 0, sticky = W)
 			
 			
@@ -249,8 +250,9 @@ class Application(Frame):
 		# command=self.askdirectory).grid(**button_opt)
 		command=self.askdirectory).grid(row = 29, column = 1, sticky = W)
 		
+		self.report_dir_path = StringVar()
 		Label(self,
-			text = " "
+			textvariable = self.report_dir_path
 			).grid(row = 30, column = 0, sticky = W)
 		
 			
@@ -321,6 +323,7 @@ class Application(Frame):
 	def askdirectory(self):
 		"""Selects Report Storage Location and prints it"""
 		report_dir_tmp = tkFileDialog.askdirectory(title="Please Select a Folder to Store Report", initialdir = "C:\\", mustexist = "False")
+		self.report_dir_path.set(report_dir_tmp)
 		vars.report_dir = report_dir_tmp.replace("/","\\")
 		print("Report Directory " + vars.report_dir)
 		
@@ -328,6 +331,7 @@ class Application(Frame):
 	def ask_vol_directory(self):
 		"""Selects Volatility's Directory and prints it"""
 		vol_dirtmp = tkFileDialog.askdirectory(title="Please Select Volatility's vol.py's Location", initialdir = "C:\\", mustexist = "False")
+		self.vol_dir_path.set(vol_dirtmp)
 		vars.vol_dir = vol_dirtmp.replace("/","\\")
 		print ("Volatility Directory " + vars.vol_dir)
 		
@@ -335,23 +339,27 @@ class Application(Frame):
 	def ask_base_dir(self):
 		"""Selects Baseline Report Folder and Prints it"""
 		vars.base_dir = tkFileDialog.askdirectory(title="Please Select Baseline Report Directory", initialdir = "C:\\", mustexist = "False")
+		self.base_path.set(vars.base_dir)
 		print ("Baseline Directory " + vars.base_dir)
 		
 	def ask_gpg_key(self):
 		"""Selects GPG File and Prints it"""
 		gpg_key_tmp = tkFileDialog.askopenfilename(title="Please Select Your GPG Key", initialdir = "C:\\")
+		self.gpg_key_path.set(gpg_key_tmp)
 		vars.gpg_key = gpg_key_tmp.replace("/","\\")
 		print ("GPG Pub Key " + vars.gpg_key)
 		
 	def ask_ir_track(self):
 		"""Selects CSV Tracking"""
 		ir_trk_tmp = tkFileDialog.askopenfilename(title="Please Select a CSV File to Record Incident", initialdir = "C:\\")
+		self.ir_trk_path.set(ir_trk_tmp)
 		vars.ir_trk = ir_trk_tmp.replace("/","\\")
 		print ("Incident CSV File " + vars.ir_trk)
 		
 	def ask_postrep(self):
 		"""Selects Report Directory for a post report and prints it"""
 		postrep_dirtmp = tkFileDialog.askdirectory(title="Please Select the Location of the collected zip files", initialdir = "C:\\Windows\\Temp", mustexist = "False")
+		self.postrep_dir_path.set(postrep_dirtmp)
 		vars.tmp_trgt_dir = postrep_dirtmp.replace("/","\\")
 		print ("Directory containing previously collected zip files " + vars.tmp_trgt_dir)
 	
@@ -366,6 +374,7 @@ class Application(Frame):
 	def ask_rr_rip(self):
 		"""Selects RegRipper rip.exe location"""
 		rip_tmp = tkFileDialog.askopenfilename(title="Please Select the RegRipper rip.exe", initialdir = "C:\\")
+		self.rr_dir_path.set(rip_tmp)
 		vars.riploc = rip_tmp.replace("/","\\")
 		print ("RegRipper rip.exe location " + vars.riploc)
 		
