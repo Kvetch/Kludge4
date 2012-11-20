@@ -1,4 +1,4 @@
-import os, datetime
+import os, platform, datetime, ConfigParser
 from os import *
 import kludge_gui as gui
 from codecs import BOM_UTF8, BOM_UTF16_BE, BOM_UTF16_LE, BOM_UTF32_BE, BOM_UTF32_LE
@@ -6,6 +6,23 @@ from codecs import BOM_UTF8, BOM_UTF16_BE, BOM_UTF16_LE, BOM_UTF32_BE, BOM_UTF32
 class KludgeVars:
 	""" Kludge Global Variables"""
 	def __init__(self):
+		global configfile
+		configfile = 'kludge.cfg'
+		global config
+		Kludge = {'ir_trk': 'C:\\',
+					'gpg_key': 'C:\\',
+					'vol_dir': 'C:\\',
+					'rr_loc': 'C:\\',
+					'postrep_dir': 'C:\\',
+					'report_dir': 'C:\\',
+					'base_dir': 'C:\\'
+					
+					}
+		# if python >= 3.2 ConfigParser
+		# else ConfigParser.SafeConfigParser
+		config = ConfigParser.SafeConfigParser(Kludge)
+		config.read(configfile)
+#		print config.get('Kludge', 'ir_trk_tmp')
 		global option_level
 		option_level = gui.StringVar()
 		option_level.set(None)
@@ -25,10 +42,12 @@ class KludgeVars:
 		mailgrab = "no"
 		global gpg_enc
 		gpg_enc = "no"
+		#global platform
+		#platf = sys.platform # see http://docs.python.org/library/sys.html#sys.platform
 		global winver
-		winver = "win7"
+		winver = "win7" #platf.win32_ver()[0] #"win7" ?
 		global proctype
-		proctype = "x86"
+		proctype = "x86" #plat.machine()#"x86"
 		global basecomp_run
 		basecomp_run = "no"
 		global vol_run
@@ -75,6 +94,7 @@ class KludgeVars:
 		gpg_uid = None
 		global postrep
 		postrep = "no"
+		global postrep_dir
 		# global use_gpg
 		# use_gpg = BooleanVar()
 		global base_dir
