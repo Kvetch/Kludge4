@@ -66,7 +66,7 @@ wmic /output:temp.csv service list brief /format:csv
 
 type temp.csv|more +1 >Services.csv
 
-wmic /output:temp.csv startup list /format:csvwmic /output:temp.csv service list brief /format:csv
+wmic /output:temp.csv startup list /format:csv
 
 type temp.csv|more +1 >Startup.csv
 
