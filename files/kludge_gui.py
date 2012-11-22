@@ -377,7 +377,7 @@ class Application(Frame):
 		"""Selects Report Storage Location and prints it"""
 		#report_dir_tmp = tkFileDialog.askdirectory(title="Please Select a Folder to Store Report", initialdir = vars.config.get('Kludge','report_dir'), mustexist = "False")
 		vars.report_dir = tkFileDialog.askdirectory(title="Please Select a Folder to Store Report", initialdir = vars.config.get('Kludge','report_dir'), mustexist = "False")
-		#vars.report_dir = report_dir_tmp.replace("/","\\")
+		vars.report_dir = vars.report_dir.replace("/","\\")
 		self.report_dir_path.set(vars.report_dir)
 		self.conf_save('report_dir', vars.report_dir)
 		print("Report Directory " + vars.report_dir)
@@ -387,7 +387,7 @@ class Application(Frame):
 		"""Selects Volatility's Directory and prints it"""
 		#vol_dirtmp = tkFileDialog.askdirectory(title="Please Select Volatility's vol.py's Location", initialdir = vars.config.get('Kludge','vol_dir'), mustexist = "False")
 		vars.vol_dir = tkFileDialog.askdirectory(title="Please Select Volatility's vol.py's Location", initialdir = vars.config.get('Kludge','vol_dir'), mustexist = "False")
-		#vars.vol_dir = vol_dirtmp.replace("/","\\")
+		vars.vol_dir = vars.vol_dir.replace("/","\\")
 		self.vol_dir_path.set(vars.vol_dir)
 		self.conf_save('vol_dir', vars.vol_dir)
 		print ("Volatility Directory " + vars.vol_dir)
@@ -396,6 +396,7 @@ class Application(Frame):
 	def ask_base_dir(self):
 		"""Selects Baseline Report Folder and Prints it"""
 		vars.base_dir = tkFileDialog.askdirectory(title="Please Select Baseline Report Directory", initialdir = vars.config.get('Kludge','base_dir'), mustexist = "False")
+		vars.base_dir = vars.base_dir.replace("/","\\")
 		self.base_dir_path.set(vars.base_dir)
 		self.conf_save('base_dir', vars.base_dir)
 		print ("Baseline Directory " + vars.base_dir)
@@ -404,16 +405,16 @@ class Application(Frame):
 		"""Selects GPG File and Prints it"""
 		#gpg_key_tmp = tkFileDialog.askopenfilename(title="Please Select Your GPG Key", initialdir = vars.config.get('Kludge','gpg_key'))
 		vars.gpg_key = tkFileDialog.askopenfilename(title="Please Select Your GPG Key", initialdir = vars.config.get('Kludge','gpg_key'))
+		vars.gpg_key = vars.gpg_key.replace("/","\\")
 		self.gpg_key_path.set(vars.gpg_key)
 		self.conf_save('gpg_key', vars.gpg_key)
-		#vars.gpg_key = gpg_key_tmp.replace("/","\\")
 		print ("GPG Pub Key " + vars.gpg_key)
 		
 	def ask_ir_track(self):
 		"""Selects CSV Tracking"""
 		#ir_trk_tmp = tkFileDialog.askopenfilename(title="Please Select a CSV File to Record Incident", initialdir = vars.config.get('Kludge','ir_trk'))
 		vars.ir_trk = tkFileDialog.askopenfilename(title="Please Select a CSV File to Record Incident", initialdir = vars.config.get('Kludge','ir_trk'))
-		#vars.ir_trk = ir_trk_tmp.replace("/","\\")
+		vars.ir_trk = vars.ir_trk.replace("/","\\")
 		print ("Incident CSV File " + str(vars.ir_trk))
 		self.ir_trk_path.set(vars.ir_trk)
 		self.conf_save('ir_trk', vars.ir_trk)
@@ -422,9 +423,9 @@ class Application(Frame):
 		"""Selects Report Directory for a post report and prints it"""
 		#postrep_dirtmp = tkFileDialog.askdirectory(title="Please Select the Location of the collected zip files", initialdir = "C:\\Windows\\Temp", mustexist = "False")
 		vars.postrep_dir = tkFileDialog.askdirectory(title="Please Select the Location of the collected zip files", initialdir = "C:\\Windows\\Temp", mustexist = "False")
+		vars.postrep_dir = vars.postrep_dir.replace("/","\\")
 		self.postrep_dir_path.set(vars.postrep_dir)
 		self.conf_save('postrep_dir', vars.postrep_dir)
-		#vars.tmp_trgt_dir = postrep_dirtmp.replace("/","\\")
 		print ("Directory containing previously collected zip files " + vars.postrep_dir)
 	
 	def run_postrep(self):
@@ -475,6 +476,7 @@ class Application(Frame):
 		print("\t\tDetach Remote Process " + vars.detach)
 		print("\t\tReport Directory is " + vars.report_dir)
 		print("\t\tWill prompt for password multiple times\n\n")
+		if(check_OS_type == 'windows'):
 		#time.sleep(5)
 		vars.tmp_trgt_dir = "c:\\windows\\temp\\" + vars.rmt_ip + "-temp"+ "-" + str(vars.timestmp)
 		call("mkdir " + vars.tmp_trgt_dir, shell=True)
