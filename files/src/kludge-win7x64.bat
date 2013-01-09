@@ -710,6 +710,7 @@ echo %date% - %time% > c:\windows\temp\analysis\done.txt
 
 title kludge-win7x64.bat[end]
 
+GOTO :eof
 REM END OF SCRIPT *******************************************************************************************************************
 
 :LockorNot
