@@ -1,25 +1,6 @@
 @echo off
 REM Please email nick@theinterw3bs.com any changes or modifications to Kludge 4.0
 
-REM mutex using a lock file
-
-if [not] exist "c:\windows\temp\kludge.lck" (
-	echo kludge-wmics.bat did not run! . Exiting ...
-    exit /b 1
-)
-
-if exist "c:\windows\temp\kludge-wmics.bat.lck" (
-	echo kludge-wmics.bat is still running?! Exiting ...
-    exit /b 1
-)
-
-if exist "c:\windows\temp\kludge-win7x64.bat.lck" (
-	echo kludge-win7x64.bat is already running. Exiting ...
-    exit /b 1
-)
-
-copy NUL "c:\windows\temp\kludge-win7x64.bat.lck"
-
 REM Set the title to show what is running
 title kludge-win7x64.bat[start]
 
@@ -727,9 +708,6 @@ REM echo.
 echo Writing out done.txt
 echo %date% - %time% > c:\windows\temp\analysis\done.txt
 
-REM clear our lock file
-del "c:\windows\temp\kludge-win7x64.bat.lck"
-del "c:\windows\temp\kludge.lck"
 title kludge-win7x64.bat[end]
 
 REM END OF SCRIPT *******************************************************************************************************************
