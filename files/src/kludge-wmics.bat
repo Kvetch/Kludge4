@@ -54,4 +54,7 @@ wmic /output:temp.csv startup list /format:csv
 
 type temp.csv|more +1 >Startup.csv
 
+
+cd c:\windows\temp\analysis
+
 title kludge-wmics.bat[end]
