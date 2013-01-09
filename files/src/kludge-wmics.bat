@@ -1,22 +1,6 @@
 @echo off
 REM Please email nick@theinterw3bs.com any changes or modifications to Kludge 4.0
 
-REM mutex using a lock file
-if exist "c:\windows\temp\kludge-wmics.bat.lck" (
-	echo kludge-wmics.bat is already running. Exiting ...
-    exit /b 1
-)
-
-copy NUL "c:\windows\temp\kludge-wmics.bat.lck"
-
-REM general kludge lock
-if exist "c:\windows\temp\kludge.lck" (
-	echo kludge is already running. Exiting ...
-    exit /b 1
-)
-
-copy NUL "c:\windows\temp\kludge.lck"
-
 REM Set the title to show what is running
 title kludge-wmics.bat[start]
 
@@ -69,7 +53,5 @@ type temp.csv|more +1 >Services.csv
 wmic /output:temp.csv startup list /format:csv
 
 type temp.csv|more +1 >Startup.csv
-
-del "c:\windows\temp\kludge-wmics.bat.lck"
 
 title kludge-wmics.bat[end]
