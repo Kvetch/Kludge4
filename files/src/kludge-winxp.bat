@@ -40,10 +40,12 @@ echo %date% - %time% > c:\windows\temp\analysis\mem-done.txt
 REM Run Bastardized FLS version against a live C: drive.  Convert output into Timeline format.  Parse out the prefetch info into the Events file also.
 if %1 geq 2 (
 echo.
-echo Gathering MFT against C drive
+echo Gathering MFT against Local drives
 echo.
+type c:\windows\temp\analysis\temp\localdrivelist.txt > localdrivelist.txt
+move /Y c:\windows\temp\analysis\temp\localdrivelist.txt SysInfo\
 mkdir TLN
-.\fls-live.exe c:/ > TLN\fls_bodyfile.txt
+FOR /F "tokens=*" %%G IN (localdrivelist.txt) DO .\fls-live.exe %%G >> TLN\fls_bodyfile.txt
 REM .\hmft.exe c: TLN\mft.dat
 echo.
 echo Running Pref against Prefetch Dir
