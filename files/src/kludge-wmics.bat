@@ -54,6 +54,13 @@ wmic /output:temp.csv startup list /format:csv
 
 type temp.csv|more +1 >Startup.csv
 
+wmic /output:temp.csv logicaldisk get caption, drivetype
+
+type temp.csv| findstr "3" >localdrivelist.txt
+
+move /Y localdrivelist.txt temp.csv
+
+for /f "tokens=1 delims= " %%i in (temp.csv) DO echo %%i >> localdrivelist.txt
 
 cd c:\windows\temp\analysis
 
