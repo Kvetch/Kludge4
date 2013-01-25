@@ -305,25 +305,28 @@ class Reporter(object):
 			# debugit.write(self.datafilepath + " \n")
 			toggleVar =  self.check_bom(bomfile)
 			if toggleVar:
-				f = codecs.open(self.datafilepath,'r', encoding='utf-16-le')
-				datafile = iter(f)
+				fi = codecs.open(self.datafilepath,'r', encoding='utf-16-le')
+				datafile = iter(fi)
 				datafile.next()
 				# debugit.write("Found ToggleVar \n")
 			else:
 				print "not UTF-16 little endian"
 				datafile = open(self.datafilepath, "r")
 			count = 0
-			for f in datafile:
-				line = f.replace('\0', '').replace('<','&lt;').replace('>','&gt;').split(',')
+			datafile1 = csv.reader(datafile, dialect=csv.excel)
+			for f in datafile1:
+				line = f #.replace('\0', '').replace('<','&lt;').replace('>','&gt;').split(',')
 				if count == 0:
 					self.openfile.writelines(["""<tr>"""])
 					for cell in line:
+						cell = cell.replace('\0', '').replace('<','&lt;').replace('>','&gt;')
 						self.openfile.writelines(["""<th>""" + cell + """</th>"""]),
 					self.openfile.writelines(["""</tr>"""]),
 					count =+ 1
 				else:
 					self.openfile.writelines(["""<tr>"""])
 					for cell in line:
+						cell = cell.replace('\0', '').replace('<','&lt;').replace('>','&gt;')
 						self.openfile.writelines(["""<td>""" + cell + """</td>"""]),
 						#if line[-1] == cell:
 							#self.openfile.writelines(["""</tr>"""]),
@@ -369,24 +372,27 @@ class Reporter(object):
 			# debugit.write(self.datafilepath + " \n")
 			toggleVar =  self.check_bom(bomfile)
 			if toggleVar:
-				f = codecs.open(self.datafilepath,'r', encoding='utf-16-le')
-				datafile = iter(f)
+				fi = codecs.open(self.datafilepath,'r', encoding='utf-16-le')
+				datafile = iter(fi)
 				datafile.next()
 			else:
 				print "not UTF-16 little endian"
 				datafile = open(self.datafilepath, "r")
 			count = 0
-			for f in datafile:
-				line = f.replace('\0', '').replace('<','&lt;').replace('>','&gt;').split(',')
+			datafile1 = csv.reader(datafile, dialect=csv.excel)
+			for f in datafile1:
+				line = f #.replace('\0', '').replace('<','&lt;').replace('>','&gt;').split(',')
 				if count == 0:
 					self.openfile.writelines(["""<tr>"""])
 					for cell in line:
+						cell = cell.replace('\0', '').replace('<','&lt;').replace('>','&gt;')
 						self.openfile.writelines(["""<th>""" + cell + """</th>"""]),
 					self.openfile.writelines(["""</tr>"""]),
 					count =+ 1
 				else:
 					self.openfile.writelines(["""<tr>"""])
 					for cell in line:
+						cell = cell.replace('\0', '').replace('<','&lt;').replace('>','&gt;')
 						self.openfile.writelines(["""<td>""" + cell + """</td>"""]),
 						#if line[-1] == cell:
 							#self.openfile.writelines(["""</tr>"""]),

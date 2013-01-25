@@ -1,6 +1,9 @@
 @echo off
 REM Please email nick@theinterw3bs.com any changes or modifications to Kludge 4.0
 
+REM Set the title to show what is running
+title kludge-wmics.bat[start]
+
 mkdir c:\windows\temp\analysis\temp
 cd c:\windows\temp\analysis\temp
 wmic.exe /output:temp.csv process list brief /format:csv
@@ -47,6 +50,18 @@ wmic /output:temp.csv service list brief /format:csv
 
 type temp.csv|more +1 >Services.csv
 
-wmic /output:temp.csv startup list /format:csvwmic /output:temp.csv service list brief /format:csv
+wmic /output:temp.csv startup list /format:csv
 
 type temp.csv|more +1 >Startup.csv
+
+wmic /output:temp.csv logicaldisk get caption, drivetype
+
+type temp.csv| findstr "3" >localdrivelist.txt
+
+move /Y localdrivelist.txt temp.csv
+
+for /f "tokens=1 delims= " %%i in (temp.csv) DO echo %%i >> localdrivelist.txt
+
+cd c:\windows\temp\analysis
+
+title kludge-wmics.bat[end]

@@ -1,6 +1,9 @@
 @echo off
 REM Please email nick@theinterw3bs.com any changes or modifications to Kludge 4.0
 
+REM Set the title to show what is running
+title kludge-winxp.bat[start]
+
 cd c:\windows\temp\analysis
 SETLOCAL EnableDelayedExpansion
 mkdir SysInfo
@@ -37,10 +40,12 @@ echo %date% - %time% > c:\windows\temp\analysis\mem-done.txt
 REM Run Bastardized FLS version against a live C: drive.  Convert output into Timeline format.  Parse out the prefetch info into the Events file also.
 if %1 geq 2 (
 echo.
-echo Gathering MFT against C drive
+echo Gathering MFT against Local drives
 echo.
+type c:\windows\temp\analysis\temp\localdrivelist.txt > localdrivelist.txt
+move /Y c:\windows\temp\analysis\temp\localdrivelist.txt SysInfo\
 mkdir TLN
-.\fls-live.exe c:/ > TLN\fls_bodyfile.txt
+FOR /F "tokens=*" %%G IN (localdrivelist.txt) DO .\fls-live.exe %%G >> TLN\fls_bodyfile.txt
 REM .\hmft.exe c: TLN\mft.dat
 echo.
 echo Running Pref against Prefetch Dir
@@ -626,7 +631,13 @@ REM ping 127.0.0.1 -n 20 -w 1 >NUL
 REM echo.
 echo Writing out done.txt
 echo %date% - %time% > c:\windows\temp\analysis\done.txt
+
+title kludge-winxp.bat[end]
+
+GOTO :eof
 REM END OF SCRIPT *******************************************************************************************************************
+
+
 
 :LockorNot
 @echo %1

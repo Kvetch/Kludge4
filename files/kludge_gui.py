@@ -1,4 +1,4 @@
-import tkFileDialog, time, os, subprocess, glob, datetime, thread, fnmatch, os, sys
+import tkFileDialog, time, os, subprocess, glob, datetime, thread, fnmatch, os, sys, ConfigParser, itertools
 from Tkinter import *
 from subprocess import *
 #sys.path.append('files')
@@ -13,7 +13,7 @@ class WhatThe():
 		"""Just A Class to kick off TKinter Class - no clue if this is correct"""
 		self = self
 		root = Tk()
-		root.title("Kludge 4.1.3")
+		root.title("Kludge 4.1.4")
 		Application(root)
 		root.mainloop()
 
@@ -25,87 +25,78 @@ class Application(Frame):
 		self.grid()
 		self.create_widgets()
 
+	def variablename(self,var):
+		return [tpl[0] for tpl in 
+			itertools.ifilter(lambda x: var is x[1], globals().items())]
+	
+	def conf_save(self, one, two):
+		vars.config.set('Kludge', one, two)
+		with open(vars.configfile, 'wb') as configz:
+			vars.config.write(configz)
+		#vars.config.read(vars.configfile)
+	
 	def create_widgets(self):
+		top=self.winfo_toplevel()                
+		top.rowconfigure(0, weight=1)            
+		top.columnconfigure(0, weight=1)         
+		self.rowconfigure(0, weight=1)           
+		self.columnconfigure(0, weight=1)        
+
 		""" Create Kludge label widgets and all sorts of other GUI crap """
 		Label(self,
 			  text = "Kludge Data Collection Script\n"
-			  ).grid(row = 0, column = 0, columnspan = 2, sticky = W)
+			  ).grid(row = 0, column = 1, columnspan = 4, sticky = W)
 
 		# option level label
-		Label(self,
-			  text = "Choose a Collection Level:"
-			 ).grid(row = 1, column = 0, sticky = W)
+#		Label(self,
+#			  text = "Choose a Collection Level:"
+#			 ).grid(row = 1, column = 0, sticky = W)
 		print("\n" + vars.timestmp)
 		
 		self.optlevel = IntVar()
 		self.optlevel.set(2)
 		# create option level radio buttons
-		Radiobutton(self,
-			text = "Simple Collection",
-			variable = self.optlevel,
-			value = 1
-			).grid(row = 1, column = 1, sticky = W)
+		self.menub  =  Menubutton ( self, text="Click here to pick Collection level",
+								relief=RAISED )
+		self.menub.grid(row = 1, column = 0, sticky = W)
+
+		self.menub.menu  =  Menu ( self.menub, tearoff=0 )
+		self.menub["menu"]  =  self.menub.menu
+
+		self.menub.menu.add_radiobutton ( label="1 Simple Collection",
+									variable=self.optlevel, value = 1 )
+		self.menub.menu.add_radiobutton ( label="2 Timeline, Registry Collection",
+									variable=self.optlevel, value = 2 )
+		self.menub.menu.add_radiobutton ( label="3 Timeline, Registry, File Hashing Collection",
+									variable=self.optlevel, value = 3 )
+
+#		Radiobutton(self,
+#			text = "Simple Collection",
+#			variable = self.optlevel,
+#			value = 1
+#			).grid(row = 1, column = 1, sticky = W)
+#
+#		# create option level radio buttons
+#		Radiobutton(self,
+#			text = "Timeline, Registry Collection",
+#			variable = self.optlevel,
+#			value = 2
+#			).grid(row = 1, column = 2, sticky = W)
 
 		# create option level radio buttons
-		Radiobutton(self,
-			text = "Timeline and Registry Collection  ",
-			variable = self.optlevel,
-			value = 2
-			).grid(row = 1, column = 2, sticky = W)
+#		Radiobutton(self,
+#			text = "Timeline, Registry, File Hashing Collection",
+#			variable = self.optlevel,
+#			value = 3
+#			).grid(row = 1, column = 3, sticky = W)
 
-		# create option level radio buttons
-		Radiobutton(self,
-			text = "Timeline, Registry, File Hashing Collection   ",
-			variable = self.optlevel,
-			value = 3
-			).grid(row = 1, column = 3, sticky = W)
-			
-			
-		# remote machine name and text entry
-		Label(self,
-			  text = "Remote Machine Name or IP: "
-			  ).grid(row = 2, column = 0, sticky = W)
-		remoteip = StringVar()
-		remoteip.set("0.0.0.0")
-		self.rmt_ip = Entry(self, textvariable=remoteip)
-		self.rmt_ip.grid(row = 2, column = 1, sticky = W)
-		
-		
-		# remote admin name and text entry
-		Label(self,
-			  text = "Admin Account Username: "
-			  ).grid(row = 3, column = 0, sticky = W)
-		adminname = StringVar()
-		adminname.set(os.getenv('USERNAME'))
-		self.admin_act = Entry(self, textvariable=adminname)
-		self.admin_act.grid(row = 3, column = 1, sticky = W)
-		
-		# analyst name and text entry
-		Label(self,
-			  text = "Analyst Name: "
-			  ).grid(row = 4, column = 0, sticky = W)
-		yourname = StringVar()
-		yourname.set(os.getenv('USERNAME'))
-		self.anal_nam = Entry(self, textvariable=yourname)
-		self.anal_nam.grid(row = 4, column = 1, sticky = W)
-		
-		# ticket number label and text
-		Label(self,
-			  text = "Ticket Number: "
-			  ).grid(row = 5, column = 0, sticky = W)
-		tix = StringVar()
-		tix.set("86753o9")
-		self.ticket_num = Entry(self, textvariable=tix)
-		self.ticket_num.grid(row = 5, column = 1, sticky = W)
-		
-		
 		# Dump Memory
 		self.dump_mem = BooleanVar()
 		Checkbutton(self,
 					text = "Dump Memory",
 					variable = self.dump_mem,
 					command = self.update_button
-					).grid(row = 6, column = 0, sticky = W)
+					).grid(row = 1, column = 1, sticky = W)
 					
 					
 		# Dump Memory
@@ -114,10 +105,53 @@ class Application(Frame):
 					text = "Collect Mail Files",
 					variable = self.collect_mail,
 					command = self.update_button
-					).grid(row = 6, column = 1, sticky = W)
-					
+					).grid(row = 1, column = 2, sticky = W)			
 		# label for space
-		Label(self, text = " ").grid(row = 7, column = 0, sticky = W)
+#		Label(self, text = " ").grid(row = 3, column = 0, sticky = W)
+
+		self.inline = BooleanVar()
+		Checkbutton(self,
+					text = "Detach Remote Process (Non-Interactive)",
+					variable = self.inline,
+					command = self.update_button
+					).grid(row = 3, column = 0, sticky = W)
+			
+		# remote machine name and text entry
+		Label(self,
+			  text = "Remote Machine Name or IP: "
+			  ).grid(row = 4, column = 0, sticky = W)
+		remoteip = StringVar()
+		remoteip.set("169.254.1.2")
+		self.rmt_ip = Entry(self, textvariable=remoteip)
+		self.rmt_ip.grid(row = 4, column = 1, sticky = W)
+		
+		
+		# remote admin name and text entry
+		Label(self,
+			  text = "Admin Account Username: "
+			  ).grid(row = 5, column = 0, sticky = W)
+		adminname = StringVar()
+		adminname.set(os.getenv('USERNAME'))
+		self.admin_act = Entry(self, textvariable=adminname)
+		self.admin_act.grid(row = 5, column = 1, sticky = W)
+		
+		# analyst name and text entry
+		Label(self,
+			  text = "Analyst Name: "
+			  ).grid(row = 6, column = 0, sticky = W)
+		yourname = StringVar()
+		yourname.set(os.getenv('USERNAME'))
+		self.anal_nam = Entry(self, textvariable=yourname)
+		self.anal_nam.grid(row = 6, column = 1, sticky = W)
+		
+		# ticket number label and text
+		Label(self,
+			  text = "Ticket Number: "
+			  ).grid(row = 7, column = 0, sticky = W)
+		tix = StringVar()
+		tix.set("86753o9")
+		self.ticket_num = Entry(self, textvariable=tix)
+		self.ticket_num.grid(row = 7, column = 1, sticky = W)
 		
 		# Track incident
 		self.record_inc = BooleanVar()
@@ -134,15 +168,22 @@ class Application(Frame):
 		# define tracking button
 		self.csv_butt = Button(self, text='CSV File', command=self.ask_ir_track, state=DISABLED)
 		self.csv_butt.grid(row = 9, column = 1, sticky = W)
+		self.ir_trk_path = StringVar()
+#		try:
+#			vars.config.get('Kludge','ir_trk')
+#		except NoSectionError:
+#			vars.config.set(vars.config.get('DEFAULT','ir_trk'))
+			
+		self.ir_trk_path.set(vars.config.get('Kludge','ir_trk'))
 		
 		# label for space
-		Label(self, text = " ").grid(row = 10, column = 0, sticky = W)
+		Label(self, textvariable = self.ir_trk_path).grid(row = 10, column = 0, sticky = W, columnspan = 4)
 				
 					
 		# GPG Encryption
 		self.use_gpg = BooleanVar()
 		Checkbutton(self,
-					text = "Use GPG Encryption (Private Key should already be imported)",
+					text = "Use GPG Encryption\n (Private Key should already be imported)",
 					variable = self.use_gpg,
 					command = self.update_button
 					).grid(row = 11, column = 0, sticky = W)
@@ -163,10 +204,14 @@ class Application(Frame):
 		
 #		Label(self, text = "\n\n\n").grid(row = 12, column = 2, sticky = W)
 		
+		self.gpg_key_path = StringVar()
+		self.gpg_key_path.set(vars.config.get('Kludge','gpg_key'))
 		
 		# label for space
-		Label(self, text = " ").grid(row = 14, column = 0, sticky = W)
+		Label(self, textvariable = self.gpg_key_path ).grid(row = 14, column = 0, sticky = W, columnspan = 4)
+		
 		self.base_compare = BooleanVar()
+		
 		Checkbutton(self,
 			text = "Baseline Comparison Checks",
 			variable = self.base_compare,
@@ -176,8 +221,10 @@ class Application(Frame):
 		Label(self, text = "Select Baseline Comparison Folder: ").grid(row = 16, column = 0, sticky = W)
 		self.base_butt = Button(self, text='Baseline Report Folder', command=self.ask_base_dir, state=DISABLED)
 		self.base_butt.grid(row = 16, column = 1, sticky = W)
+		self.base_dir_path = StringVar()
+		self.base_dir_path.set(vars.config.get('Kludge','base_dir'))
+		Label(self, textvariable = self.base_dir_path).grid(row = 17, column = 0, sticky = W, columnspan = 4)
 		
-		Label(self, text = " ").grid(row = 17, column = 0, sticky = W)
 		self.vol_analysis = BooleanVar()
 		Checkbutton(self,
 			text = "Volatility Memory Analysis",
@@ -186,16 +233,18 @@ class Application(Frame):
 			).grid(row = 18, column = 0, sticky = W)
 			
 		Label(self,
-			text = "Select your Volatility Directory Location:     "
+			text = "Select your Volatility Directory Location: "
 			).grid(row = 19, column = 0, sticky = W)
 			
 		# define report button
 		self.vol_butt = Button(self, text='Volatility Directory', command=self.ask_vol_directory, state=DISABLED)
 		self.vol_butt.grid(row = 19, column = 1, sticky = W)
+		self.vol_dir_path = StringVar()
+		self.vol_dir_path.set(vars.config.get('Kludge','vol_dir'))
 		
 		Label(self,
-			text = " "
-			).grid(row = 20, column = 0, sticky = W)
+			textvariable = self.vol_dir_path
+			).grid(row = 20, column = 0, sticky = W, columnspan = 4 )
 			
 		self.rr_loc = BooleanVar()
 		Checkbutton(self,
@@ -208,37 +257,39 @@ class Application(Frame):
 		
 		self.rr_butt = Button(self, text='RegRipper Location', command=self.ask_rr_rip, state=DISABLED)
 		self.rr_butt.grid(row = 22, column = 1, sticky = W)
+		self.rr_dir_path = StringVar()
+		self.rr_dir_path.set(vars.config.get('Kludge','rr_loc'))
 		
 		Label(self,
-			text = " "
-			).grid(row = 23, column = 0, sticky = W)
+			textvariable = self.rr_dir_path
+			).grid(row = 23, column = 0, sticky = W, columnspan = 4)
 		
-		self.inline = BooleanVar()
-		Checkbutton(self,
-					text = "Detach Remote Process (Non-Interactive)",
-					variable = self.inline,
-					command = self.update_button
-					).grid(row = 24, column = 0, sticky = W)
+
 		
 		Label(self,
 			text = " "
 			).grid(row = 25, column = 0, sticky = W)
 		
+		Button(self, text='Run new Kludge',
+			command=self.run_kludge).grid(row = 24, column = 1, sticky = W)
+		
 		self.postreport = BooleanVar()
 		Checkbutton(self,
-					text = "Create Report from Previous collection (You must complete all information above)",
+					text = "Create Report from Previous collection\n (You must complete all information above)",
 					variable = self.postreport,
 					command = self.update_button
-					).grid(row = 26, column = 0, sticky = W)
+					).grid(row = 25, column = 2, sticky = W, columnspan = 2 )
 		
-		Label(self, text = "Select the directory with collected zip files(c:\\windows\\temp): ").grid(row = 27, column = 0, sticky = W)
+		Label(self, text = "Select the directory with collected zip files\n(c:\\windows\\temp): ").grid(row = 27, column = 0, sticky = W, columnspan = 4)
 		
 		self.postrep_butt = Button(self, text='Collected Zip File Directory', command=self.ask_postrep, state=DISABLED)
-		self.postrep_butt.grid(row = 27, column = 1, sticky = W)
+		self.postrep_butt.grid(row = 27, column = 2, sticky = W, columnspan = 2)
+		self.postrep_dir_path = StringVar()
+		self.postrep_dir_path.set(vars.config.get('Kludge','postrep_dir'))
 		
 		Label(self,
-			text = " "
-			).grid(row = 28, column = 0, sticky = W)
+			textvariable = self.postrep_dir_path
+			).grid(row = 28, column = 0, sticky = W, columnspan = 4)
 			
 			
 		# label for report button
@@ -249,13 +300,17 @@ class Application(Frame):
 		# command=self.askdirectory).grid(**button_opt)
 		command=self.askdirectory).grid(row = 29, column = 1, sticky = W)
 		
+		self.report_dir_path = StringVar()
+		self.report_dir_path.set(vars.config.get('Kludge','report_dir'))
+		vars.report_dir = vars.config.get('Kludge','report_dir')
+		print("Report Directory " + vars.report_dir)
+		
 		Label(self,
-			text = " "
-			).grid(row = 30, column = 0, sticky = W)
+			textvariable = self.report_dir_path
+			).grid(row = 30, column = 0, sticky = W, columnspan = 4)
 		
 			
-		Button(self, text='Run new Kludge',
-		command=self.run_kludge).grid(row = 31, column = 1, sticky = W)
+
 		
 		Button(self, text='Create Report from previous Kludge',
 		command=self.run_postrep).grid(row = 31, column = 2, sticky = W)
@@ -320,40 +375,58 @@ class Application(Frame):
 			
 	def askdirectory(self):
 		"""Selects Report Storage Location and prints it"""
-		report_dir_tmp = tkFileDialog.askdirectory(title="Please Select a Folder to Store Report", initialdir = "C:\\", mustexist = "False")
-		vars.report_dir = report_dir_tmp.replace("/","\\")
+		#report_dir_tmp = tkFileDialog.askdirectory(title="Please Select a Folder to Store Report", initialdir = vars.config.get('Kludge','report_dir'), mustexist = "False")
+		vars.report_dir = tkFileDialog.askdirectory(title="Please Select a Folder to Store Report", initialdir = vars.config.get('Kludge','report_dir'), mustexist = "False")
+		vars.report_dir = vars.report_dir.replace("/","\\")
+		self.report_dir_path.set(vars.report_dir)
+		self.conf_save('report_dir', vars.report_dir)
 		print("Report Directory " + vars.report_dir)
 		
 		
 	def ask_vol_directory(self):
 		"""Selects Volatility's Directory and prints it"""
-		vol_dirtmp = tkFileDialog.askdirectory(title="Please Select Volatility's vol.py's Location", initialdir = "C:\\", mustexist = "False")
-		vars.vol_dir = vol_dirtmp.replace("/","\\")
+		#vol_dirtmp = tkFileDialog.askdirectory(title="Please Select Volatility's vol.py's Location", initialdir = vars.config.get('Kludge','vol_dir'), mustexist = "False")
+		vars.vol_dir = tkFileDialog.askdirectory(title="Please Select Volatility's vol.py's Location", initialdir = vars.config.get('Kludge','vol_dir'), mustexist = "False")
+		vars.vol_dir = vars.vol_dir.replace("/","\\")
+		self.vol_dir_path.set(vars.vol_dir)
+		self.conf_save('vol_dir', vars.vol_dir)
 		print ("Volatility Directory " + vars.vol_dir)
 		
 		
 	def ask_base_dir(self):
 		"""Selects Baseline Report Folder and Prints it"""
-		vars.base_dir = tkFileDialog.askdirectory(title="Please Select Baseline Report Directory", initialdir = "C:\\", mustexist = "False")
+		vars.base_dir = tkFileDialog.askdirectory(title="Please Select Baseline Report Directory", initialdir = vars.config.get('Kludge','base_dir'), mustexist = "False")
+		vars.base_dir = vars.base_dir.replace("/","\\")
+		self.base_dir_path.set(vars.base_dir)
+		self.conf_save('base_dir', vars.base_dir)
 		print ("Baseline Directory " + vars.base_dir)
 		
 	def ask_gpg_key(self):
 		"""Selects GPG File and Prints it"""
-		gpg_key_tmp = tkFileDialog.askopenfilename(title="Please Select Your GPG Key", initialdir = "C:\\")
-		vars.gpg_key = gpg_key_tmp.replace("/","\\")
+		#gpg_key_tmp = tkFileDialog.askopenfilename(title="Please Select Your GPG Key", initialdir = vars.config.get('Kludge','gpg_key'))
+		vars.gpg_key = tkFileDialog.askopenfilename(title="Please Select Your GPG Key", initialdir = vars.config.get('Kludge','gpg_key'))
+		vars.gpg_key = vars.gpg_key.replace("/","\\")
+		self.gpg_key_path.set(vars.gpg_key)
+		self.conf_save('gpg_key', vars.gpg_key)
 		print ("GPG Pub Key " + vars.gpg_key)
 		
 	def ask_ir_track(self):
 		"""Selects CSV Tracking"""
-		ir_trk_tmp = tkFileDialog.askopenfilename(title="Please Select a CSV File to Record Incident", initialdir = "C:\\")
-		vars.ir_trk = ir_trk_tmp.replace("/","\\")
-		print ("Incident CSV File " + vars.ir_trk)
-		
+		#ir_trk_tmp = tkFileDialog.askopenfilename(title="Please Select a CSV File to Record Incident", initialdir = vars.config.get('Kludge','ir_trk'))
+		vars.ir_trk = tkFileDialog.askopenfilename(title="Please Select a CSV File to Record Incident", initialdir = vars.config.get('Kludge','ir_trk'))
+		vars.ir_trk = vars.ir_trk.replace("/","\\")
+		print ("Incident CSV File " + str(vars.ir_trk))
+		self.ir_trk_path.set(vars.ir_trk)
+		self.conf_save('ir_trk', vars.ir_trk)
+				
 	def ask_postrep(self):
 		"""Selects Report Directory for a post report and prints it"""
-		postrep_dirtmp = tkFileDialog.askdirectory(title="Please Select the Location of the collected zip files", initialdir = "C:\\Windows\\Temp", mustexist = "False")
-		vars.tmp_trgt_dir = postrep_dirtmp.replace("/","\\")
-		print ("Directory containing previously collected zip files " + vars.tmp_trgt_dir)
+		#postrep_dirtmp = tkFileDialog.askdirectory(title="Please Select the Location of the collected zip files", initialdir = "C:\\Windows\\Temp", mustexist = "False")
+		vars.postrep_dir = tkFileDialog.askdirectory(title="Please Select the Location of the collected zip files", initialdir = "C:\\Windows\\Temp", mustexist = "False")
+		vars.postrep_dir = vars.postrep_dir.replace("/","\\")
+		self.postrep_dir_path.set(vars.postrep_dir)
+		self.conf_save('postrep_dir', vars.postrep_dir)
+		print ("Directory containing previously collected zip files " + vars.postrep_dir)
 	
 	def run_postrep(self):
 		"""blah blah"""
@@ -365,10 +438,14 @@ class Application(Frame):
 		
 	def ask_rr_rip(self):
 		"""Selects RegRipper rip.exe location"""
-		rip_tmp = tkFileDialog.askopenfilename(title="Please Select the RegRipper rip.exe", initialdir = "C:\\")
-		vars.riploc = rip_tmp.replace("/","\\")
-		print ("RegRipper rip.exe location " + vars.riploc)
-		
+		#rip_tmp = tkFileDialog.askopenfilename(title="Please Select the RegRipper rip.exe", initialdir = "C:\\")
+		vars.rr_loc = tkFileDialog.askopenfilename(title="Please Select the RegRipper rip.exe", initialdir = vars.config.get('Kludge','rr_loc'))
+		self.rr_dir_path.set(vars.rr_loc)
+		self.conf_save('rr_loc', vars.rr_loc)
+		#vars.riploc = rip_tmp.replace("/","\\")
+		print ("RegRipper rip.exe location " + vars.rr_loc)
+
+
 	def run_kludge(self):
 		"""Execute the Script, check if memory dump is done and check if remote script is done"""
 		vars.rmt_ip = self.rmt_ip.get()
@@ -399,6 +476,7 @@ class Application(Frame):
 		print("\t\tDetach Remote Process " + vars.detach)
 		print("\t\tReport Directory is " + vars.report_dir)
 		print("\t\tWill prompt for password multiple times\n\n")
+		if(check_OS_type == 'windows'):
 		#time.sleep(5)
 		vars.tmp_trgt_dir = "c:\\windows\\temp\\" + vars.rmt_ip + "-temp"+ "-" + str(vars.timestmp)
 		call("mkdir " + vars.tmp_trgt_dir, shell=True)
