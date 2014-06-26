@@ -601,7 +601,7 @@ sigcheck -u -e c:\windows\system32 >> DocsAndFiles\UnSignedExes.txt
 
 REM Write all files in Prog Files, Doc and Set, Windows, SAV/McAfee Quarantine
 echo.
-echo Outputting Directory Listing for Program Files, ProgramData, Docs&Settings, Users, Windows, PerfLogs, Recovery, C:, D:, E:, SAV, SEP and McAfee Quarantine.
+echo Outputting Directory Listing for Program Files, ProgramData, Docs and Settings, Users, Windows, PerfLogs, Recovery, C:, D:, E:, SAV, SEP and McAfee Quarantine.
 dir /S /A /Q "C:\Program Files" >> DocsAndFiles\ProgFilesDir.txt
 dir /S /A /Q "C:\ProgramData" >> DocsAndFiles\ProgData.txt
 dir /S /A /Q "C:\Documents and Settings">> DocsAndFiles\DocsSet.txt
